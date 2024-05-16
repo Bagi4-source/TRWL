@@ -1,0 +1,53 @@
+package com.poizonapi.trwl.controller;
+
+import com.poizonapi.trwl.service.PoizonAsiaEastParserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
+
+
+@Tag(name = "Poizon")
+@CrossOrigin
+@RestController
+@RequestMapping("/poizon")
+class PoizonAsiaEastController {
+    @Autowired
+    private PoizonAsiaEastParserService poizonAsiaEastParserService;
+
+    @Operation(summary = "Получение информации о товаре")
+    @GetMapping("/getProductInfo")
+    ResponseEntity<Map<String, Object>> getProductInfo(long spuId) {
+        return poizonAsiaEastParserService.productInfo(spuId);
+    }
+
+    @Operation(summary = "Получение цен товара")
+    @GetMapping("/getPriceInfo")
+    ResponseEntity<Map<String, Object>> getPriceInfo(long spuId) {
+        return poizonAsiaEastParserService.priceInfo(spuId);
+    }
+
+    @Operation(summary = "Получение размерных сеток")
+    @GetMapping("/getSizeTable")
+    ResponseEntity<Map<String, Object>> getSizeTable(long spuId) {
+        return poizonAsiaEastParserService.sizeTable(spuId);
+    }
+
+    @Operation(summary = "Получение похожих товаров")
+    @GetMapping("/getSimilarProducts")
+    ResponseEntity<Map<String, Object>> getSimilarProducts(long spuId) {
+        return poizonAsiaEastParserService.similarProducts(spuId);
+    }
+
+    @Operation(summary = "Поиск товаров по ключевому слову")
+    @GetMapping("/search")
+    ResponseEntity<Map<String, Object>> search(String keyword, int page, int pageSize) {
+        return poizonAsiaEastParserService.getItems(keyword, page, pageSize);
+    }
+}
