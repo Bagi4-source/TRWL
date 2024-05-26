@@ -23,31 +23,37 @@ class PoizonAsiaEastController {
 
     @Operation(summary = "Получение информации о товаре")
     @GetMapping("/getProductInfo")
-    ResponseEntity<Map<String, Object>> getProductInfo(long spuId) {
+    public ResponseEntity<Map<String, Object>> getProductInfo(long spuId) {
         return poizonAsiaEastParserService.productInfo(spuId);
+    }
+
+    @Operation(summary = "Получение информации о товаре 2")
+    @GetMapping("/getProductInfo2")
+    public ResponseEntity<Map<String, Object>> getProductInfo2(long spuId) {
+        return poizonAsiaEastParserService.productInfo2(spuId);
     }
 
     @Operation(summary = "Получение цен товара")
     @GetMapping("/getPriceInfo")
-    ResponseEntity<Map<String, Object>> getPriceInfo(long spuId) {
+    public ResponseEntity<Map<String, Object>> getPriceInfo(long spuId) {
         return poizonAsiaEastParserService.priceInfo(spuId);
     }
 
     @Operation(summary = "Получение размерных сеток")
     @GetMapping("/getSizeTable")
-    ResponseEntity<Map<String, Object>> getSizeTable(long spuId) {
+    public ResponseEntity<Map<String, Object>> getSizeTable(long spuId) {
         return poizonAsiaEastParserService.sizeTable(spuId);
     }
 
     @Operation(summary = "Получение похожих товаров")
     @GetMapping("/getSimilarProducts")
-    ResponseEntity<Map<String, Object>> getSimilarProducts(long spuId) {
+    public ResponseEntity<Map<String, Object>> getSimilarProducts(long spuId) {
         return poizonAsiaEastParserService.similarProducts(spuId);
     }
 
     @Operation(summary = "Поиск товаров по ключевому слову")
     @GetMapping("/search")
-    ResponseEntity<Map<String, Object>> search(String keyword, int page, int pageSize) {
+    public ResponseEntity<Map<String, Object>> search(String keyword, int page, int pageSize) {
         return poizonAsiaEastParserService.getItems(keyword, page, pageSize);
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
@@ -42,6 +43,28 @@ public class PoizonAsiaEastParserService {
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(dataSigned.getData(), headers);
 
         String url = "https://asia-east-public.poizon.com/api/v1/app/bigger/intl/commodity/app/get-index-spu-detail";
+
+        return makeDewuResponse(request, url);
+    }
+
+    public ResponseEntity<Map<String, Object>> productInfo2(long spuId) {
+        HttpHeaders headers = getDefaultHeaders();
+        Map<String, Object> data = new HashMap<>();
+        data.put("uuid", "813d91d1dd27edf9");
+        data.put("loginToken", "");
+        data.put("platform", "android");
+        data.put("spuId", spuId);
+        data.put("timestamp", "1709102939889");
+        data.put("v", "5.36.000");
+
+        SignObject dataSigned = signService.getNewSign(data);
+        data = dataSigned.getData();
+        data.put("sign", data.get("newSign"));
+        data.remove("uuid");
+
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(dataSigned.getData(), headers);
+
+        String url = "https://asia-east-public.poizon.com/api/v1/app/bigger/intl/commodity/get-index-spu-detail";
 
         return makeDewuResponse(request, url);
     }
@@ -97,8 +120,8 @@ public class PoizonAsiaEastParserService {
         data.put("spuId", spuId);
         data.put("timestamp", "1709102939889");
         data.put("v", "5.36.000");
-
         SignObject dataSigned = signService.getNewSign(data);
+        System.out.println(dataSigned);
         data = dataSigned.getData();
         data.put("sign", data.get("newSign"));
         data.remove("uuid");
@@ -145,13 +168,16 @@ public class PoizonAsiaEastParserService {
     }
 
     private ResponseEntity<Map<String, Object>> makeDewuResponse(HttpEntity<Map<String, Object>> request, String url) {
-        ResponseEntity<Map> response = restTemplate.postForEntity(url, request, Map.class);
-        if (response.getStatusCode().is2xxSuccessful()) {
-            Map<String, Object> result = response.getBody();
-            return ResponseEntity.ok(result);
-        } else {
-            return ResponseEntity.status(response.getStatusCode()).body(null);
+        try {
+            ResponseEntity<Map> response = restTemplate.postForEntity(url, request, Map.class);
+            if (response.getStatusCode().is2xxSuccessful()) {
+                Map<String, Object> result = response.getBody();
+                return ResponseEntity.ok(result);
+            }
+        } catch (HttpClientErrorException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(e.getResponseBodyAs(Map.class));
         }
+        return ResponseEntity.status(500).build();
     }
 
     private HttpHeaders getDefaultHeaders() {
