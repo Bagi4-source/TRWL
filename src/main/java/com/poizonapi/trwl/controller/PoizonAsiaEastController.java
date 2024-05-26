@@ -51,9 +51,27 @@ class PoizonAsiaEastController {
         return poizonAsiaEastParserService.similarProducts(spuId);
     }
 
+    @Operation(summary = "Получение рекомендованных товаров")
+    @GetMapping("/getRecommendedProducts")
+    public ResponseEntity<Map<String, Object>> getRecommendedProducts(long spuId, int pageOffset, int pageSize) {
+        return poizonAsiaEastParserService.recommendedProducts(spuId, pageOffset, pageSize);
+    }
+
     @Operation(summary = "Поиск товаров по ключевому слову")
     @GetMapping("/search")
     public ResponseEntity<Map<String, Object>> search(String keyword, int page, int pageSize) {
         return poizonAsiaEastParserService.getItems(keyword, page, pageSize);
+    }
+
+    @Operation(summary = "Поиск товаров по бренду")
+    @GetMapping("/searchByBrandId")
+    public ResponseEntity<Map<String, Object>> searchByBrandId(long brandId, int page, int pageSize) {
+        return poizonAsiaEastParserService.searchByBrandId(brandId, page, pageSize);
+    }
+
+    @Operation(summary = "Получение списка брендов")
+    @GetMapping("/brandList")
+    public ResponseEntity<Map<String, Object>> brandList() {
+        return poizonAsiaEastParserService.brandList();
     }
 }

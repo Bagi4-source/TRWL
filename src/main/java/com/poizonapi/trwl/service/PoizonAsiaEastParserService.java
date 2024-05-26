@@ -131,6 +131,72 @@ public class PoizonAsiaEastParserService {
         String url = "https://asia-east-public.poizon.com/api/v1/app/bigger/intl/commodity/queryPurchaseFloatingLayer";
         return makeDewuResponse(request, url);
     }
+    public ResponseEntity<Map<String, Object>> recommendedProducts(long spuId, int pageOffset, int pageSize) {
+        HttpHeaders headers = getDefaultHeaders();
+        Map<String, Object> data = new HashMap<>();
+        data.put("uuid", "813d91d1dd27edf9");
+        data.put("loginToken", "");
+        data.put("platform", "android");
+        data.put("spuId", spuId);
+        data.put("timestamp", "1709102939889");
+        data.put("v", "5.36.000");
+        data.put("pageOffset", pageOffset);
+        data.put("pageSize", pageSize);
+        SignObject dataSigned = signService.getNewSign(data);
+        System.out.println(dataSigned);
+        data = dataSigned.getData();
+        data.put("sign", data.get("newSign"));
+        data.remove("uuid");
+
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(dataSigned.getData(), headers);
+
+        String url = "https://asia-east-public.poizon.com/api/v1/app/bigger/intl/spu-search/app/spu/recommend/v2";
+        return makeDewuResponse(request, url);
+    }
+
+
+    public ResponseEntity<Map<String, Object>> searchByBrandId(long brandId, int page, int pageSize) {
+        HttpHeaders headers = getDefaultHeaders();
+        Map<String, Object> data = new HashMap<>();
+        data.put("uuid", "813d91d1dd27edf9");
+        data.put("loginToken", "");
+        data.put("platform", "android");
+        data.put("brandId", brandId);
+        data.put("timestamp", "1709102939889");
+        data.put("v", "5.36.000");
+        data.put("pageNum", page);
+        data.put("pageSize", pageSize);
+        SignObject dataSigned = signService.getNewSign(data);
+        System.out.println(dataSigned);
+        data = dataSigned.getData();
+        data.put("sign", data.get("newSign"));
+        data.remove("uuid");
+
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(dataSigned.getData(), headers);
+
+        String url = "https://asia-east-public.poizon.com/api/v1/app/bigger/intl/spu-search/app/spu/list";
+        return makeDewuResponse(request, url);
+    }
+
+    public ResponseEntity<Map<String, Object>> brandList() {
+        HttpHeaders headers = getDefaultHeaders();
+        Map<String, Object> data = new HashMap<>();
+        data.put("uuid", "813d91d1dd27edf9");
+        data.put("loginToken", "");
+        data.put("platform", "android");
+        data.put("timestamp", "1709102939889");
+        data.put("v", "5.36.000");
+        SignObject dataSigned = signService.getNewSign(data);
+        System.out.println(dataSigned);
+        data = dataSigned.getData();
+        data.put("sign", data.get("newSign"));
+        data.remove("uuid");
+
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(dataSigned.getData(), headers);
+
+        String url = "https://asia-east-public.poizon.com/api/v1/app/bigger/intl/brand/list";
+        return makeDewuResponse(request, url);
+    }
 
     public ResponseEntity<Map<String, Object>> getItems(String keyword, int page, int pageSize) {
         HttpHeaders headers = getDefaultHeaders();
