@@ -24,7 +24,7 @@ repositories {
 
 openApiGenerate {
     inputSpec = "$rootDir/api-spec.json"
-    outputDir = "$projectDir/src/main/java/generated/poizonAPI"
+    outputDir = "$projectDir/poizonAPI"
     generatorName = "java"
 }
 
@@ -38,6 +38,7 @@ dependencies {
     implementation 'com.github.zhkl0228:unidbg-api:0.9.6'
     // https://mavenlibs.com/maven/dependency/com.github.zhkl0228/unidbg-android
     implementation 'com.github.zhkl0228:unidbg-android:0.9.6'
+    implementation project("poizonAPI")
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
