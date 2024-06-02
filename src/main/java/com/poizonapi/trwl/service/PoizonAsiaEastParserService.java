@@ -1,14 +1,14 @@
 package com.poizonapi.trwl.service;
 
+import com.poizonapi.trwl.dto.priceInfo.PriceInfo;
 import com.poizonapi.trwl.dto.SignObject;
+import com.poizonapi.trwl.dto.productInfo.ProductInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,7 +47,7 @@ public class PoizonAsiaEastParserService {
         return makeDewuResponse(request, url);
     }
 
-    public ResponseEntity<Map<String, Object>> productInfo2(long spuId) {
+    public ProductInfo productInfo2(long spuId) {
         HttpHeaders headers = getDefaultHeaders();
         Map<String, Object> data = new HashMap<>();
         data.put("uuid", "813d91d1dd27edf9");
@@ -66,7 +66,11 @@ public class PoizonAsiaEastParserService {
 
         String url = "https://asia-east-public.poizon.com/api/v1/app/bigger/intl/commodity/get-index-spu-detail";
 
-        return makeDewuResponse(request, url);
+        ResponseEntity<ProductInfo> response = restTemplate.postForEntity(url, request, ProductInfo.class);
+        if (response.getStatusCode().is2xxSuccessful()) {
+            return response.getBody();
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Товар не найден!");
     }
 
     public ResponseEntity<Map<String, Object>> sizeTable(long spuId) {
@@ -111,7 +115,7 @@ public class PoizonAsiaEastParserService {
         return makeDewuResponse(request, url);
     }
 
-    public ResponseEntity<Map<String, Object>> priceInfo(long spuId) {
+    public PriceInfo priceInfo(long spuId) {
         HttpHeaders headers = getDefaultHeaders();
         Map<String, Object> data = new HashMap<>();
         data.put("uuid", "813d91d1dd27edf9");
@@ -121,7 +125,6 @@ public class PoizonAsiaEastParserService {
         data.put("timestamp", "1709102939889");
         data.put("v", "5.36.000");
         SignObject dataSigned = signService.getNewSign(data);
-        System.out.println(dataSigned);
         data = dataSigned.getData();
         data.put("sign", data.get("newSign"));
         data.remove("uuid");
@@ -129,7 +132,11 @@ public class PoizonAsiaEastParserService {
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(dataSigned.getData(), headers);
 
         String url = "https://asia-east-public.poizon.com/api/v1/app/bigger/intl/commodity/queryPurchaseFloatingLayer";
-        return makeDewuResponse(request, url);
+        ResponseEntity<PriceInfo> response = restTemplate.postForEntity(url, request, PriceInfo.class);
+        if (response.getStatusCode().is2xxSuccessful()) {
+            return response.getBody();
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Товар не найден!");
     }
     public ResponseEntity<Map<String, Object>> recommendedProducts(long spuId, int pageOffset, int pageSize) {
         HttpHeaders headers = getDefaultHeaders();

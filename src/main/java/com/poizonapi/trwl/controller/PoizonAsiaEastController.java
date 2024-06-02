@@ -1,5 +1,7 @@
 package com.poizonapi.trwl.controller;
 
+import com.poizonapi.trwl.dto.priceInfo.PriceInfo;
+import com.poizonapi.trwl.dto.productInfo.ProductInfo;
 import com.poizonapi.trwl.service.PoizonAsiaEastParserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,13 +31,13 @@ class PoizonAsiaEastController {
 
     @Operation(summary = "Получение информации о товаре 2")
     @GetMapping("/getProductInfo2")
-    public ResponseEntity<Map<String, Object>> getProductInfo2(long spuId) {
+    public ProductInfo getProductInfo2(long spuId) {
         return poizonAsiaEastParserService.productInfo2(spuId);
     }
 
     @Operation(summary = "Получение цен товара")
     @GetMapping("/getPriceInfo")
-    public ResponseEntity<Map<String, Object>> getPriceInfo(long spuId) {
+    public PriceInfo getPriceInfo(long spuId) {
         return poizonAsiaEastParserService.priceInfo(spuId);
     }
 

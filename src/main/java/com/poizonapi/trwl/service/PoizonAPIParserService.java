@@ -5,6 +5,7 @@ import org.openapitools.client.ApiException;
 import org.openapitools.client.api.ProductApi;
 import org.openapitools.client.api.SearchApi;
 import org.openapitools.client.model.DetailResponseType;
+import org.openapitools.client.model.DetailWithPricesResponseType;
 import org.openapitools.client.model.ProductSearchResponse;
 import org.openapitools.client.model.SkusInfoMap;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,6 +38,14 @@ public class PoizonAPIParserService {
     public SkusInfoMap getSkusInfo(long spuId) {
         try {
             return productApi.dewuControllerGetSkuInfoBySpuId(BigDecimal.valueOf(spuId));
+        } catch (ApiException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found", e);
+        }
+    }
+
+    public DetailWithPricesResponseType getProductInfoWithPrices(long spuId) {
+        try {
+            return productApi.dewuControllerGetProductDetailWithPrice(BigDecimal.valueOf(spuId));
         } catch (ApiException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found", e);
         }

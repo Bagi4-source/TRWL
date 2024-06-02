@@ -3,10 +3,7 @@ package com.poizonapi.trwl.controller;
 import com.poizonapi.trwl.service.PoizonAPIParserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.openapitools.client.model.DetailResponseType;
-import org.openapitools.client.model.GetProductDetail200Response;
-import org.openapitools.client.model.ProductSearchResponse;
-import org.openapitools.client.model.SkusInfoMap;
+import org.openapitools.client.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +16,12 @@ import org.springframework.web.bind.annotation.*;
 class PoizonAPIController {
     @Autowired
     private PoizonAPIParserService poizonAPIParserService;
+
+    @Operation(summary = "Получение информации о товаре и ценах")
+    @GetMapping("/getProductInfoWithPrices")
+    public DetailWithPricesResponseType getProductInfoWithPrices(long spuId) {
+        return poizonAPIParserService.getProductInfoWithPrices(spuId);
+    }
 
     @Operation(summary = "Получение информации о товаре")
     @GetMapping("/getProductInfo")
