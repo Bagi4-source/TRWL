@@ -15,7 +15,7 @@ import com.poizonapi.trwl.dto.SignObject;
 import lombok.Synchronized;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
+import java.io.*;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -40,11 +40,26 @@ public class SignService {
         vm = emulator.createDalvikVM();
         vm.setDvmClassFactory(new ProxyClassFactory());
         vm.setVerbose(false);
-        URL url = getClass().getResource("/libs/libJNIEncrypt.so");
-        assert url != null;
-        DalvikModule dm = vm.loadLibrary(new File(url.getPath()), false);
-        cSignUtil = vm.resolveClass("com/duapp/aesjni/AESEncrypt");
-        dm.callJNI_OnLoad(emulator);
+        try(InputStream inputStream = getClass().getResourceAsStream("/libs/libJNIEncrypt.so");) {
+            if (inputStream == null) {
+                throw new FileNotFoundException("Resource not found: /libs/libJNIEncrypt.so");
+            }
+            File tempFile = File.createTempFile("libJNIEncrypt", ".so");
+            tempFile.deleteOnExit();
+
+            try (FileOutputStream outputStream = new FileOutputStream(tempFile)) {
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
+            }
+            DalvikModule dm = vm.loadLibrary(tempFile, false);
+            cSignUtil = vm.resolveClass("com/duapp/aesjni/AESEncrypt");
+            dm.callJNI_OnLoad(emulator);
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to load JNI library", e);
+        }
     }
 
     @Synchronized
