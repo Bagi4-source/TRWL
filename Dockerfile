@@ -4,6 +4,7 @@ RUN mkdir /app && mkdir /src
 WORKDIR /src
 COPY . .
 
+RUN gradle openApiGenerate
 RUN gradle bootJar
 RUN chmod +x build/libs/TRWL.jar
 
