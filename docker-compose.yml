@@ -2,19 +2,14 @@ version: "3.8"
 
 services:
   backend:
-    container_name: backend-poizon
+    container_name: backend
     build: .
     ports:
-      - "8090:8081"
+      - "8081:8081"
     restart: unless-stopped
-    networks:
-      - app-network
     healthcheck:
       test: curl --fail http://localhost:8081/ping || exit 1
       interval: 60s
       retries: 5
       start_period: 10s
       timeout: 5s
-
-networks:
-  app-network:
