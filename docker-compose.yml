@@ -7,6 +7,8 @@ services:
     ports:
       - "8090:8081"
     restart: unless-stopped
+    networks:
+      - app-network
     healthcheck:
       test: curl --fail http://localhost:8081/ping || exit 1
       interval: 60s
@@ -14,7 +16,5 @@ services:
       start_period: 10s
       timeout: 5s
 
-volumes:
-  grafana-storage: {}
-  redis_data: {}
-  prometheus_data: {}
+networks:
+  app-network:
